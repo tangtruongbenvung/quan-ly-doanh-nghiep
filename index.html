@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quản Lý Doanh Nghiệp - V1</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" rel="stylesheet">
+  <link href="css/app.css" rel="stylesheet">
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="brand-mark"><i class="fa-solid fa-chart-line"></i></div>
+      <div><strong>QUẢN LÝ</strong><small>DOANH NGHIỆP</small></div>
+    </div>
+
+    <div class="menu-label">TỔNG QUAN</div>
+    <a class="menu-item active" data-page="dashboard"><i class="fa-solid fa-gauge-high"></i><span>Tổng quan</span></a>
+
+    <div class="menu-label">QUẢN LÝ</div>
+    <a class="menu-item" data-page="customers"><i class="fa-solid fa-users"></i><span>Khách hàng / Đại lý</span></a>
+    <a class="menu-item" data-page="products"><i class="fa-solid fa-box-open"></i><span>Sản phẩm</span></a>
+    <a class="menu-item" data-page="orders"><i class="fa-solid fa-cart-shopping"></i><span>Đơn hàng</span></a>
+    <a class="menu-item" data-page="delivery"><i class="fa-solid fa-truck-fast"></i><span>Giao hàng</span></a>
+    <a class="menu-item" data-page="debt"><i class="fa-solid fa-file-invoice-dollar"></i><span>Công nợ</span></a>
+
+    <div class="menu-label">HỆ THỐNG</div>
+    <a class="menu-item" data-page="reports"><i class="fa-solid fa-chart-column"></i><span>Báo cáo</span></a>
+    <a class="menu-item" data-page="settings"><i class="fa-solid fa-gear"></i><span>Cài đặt</span></a>
+
+    <div class="sidebar-footer">V1.0 • Dữ liệu trình duyệt</div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <button class="icon-btn" id="toggleSidebar"><i class="fa-solid fa-bars"></i></button>
+      <div class="breadcrumb-title" id="pageTitle">Tổng quan</div>
+      <div class="top-actions">
+        <button class="icon-btn" title="Thông báo"><i class="fa-regular fa-bell"></i></button>
+        <div class="user-chip"><span class="avatar">ĐD</span><span>Quản trị viên</span></div>
+      </div>
+    </header>
+
+    <div class="content">
+      <section id="dashboard" class="page active">
+        <div class="page-head">
+          <div><h2>Tổng quan</h2><p>Trung tâm điều hành hoạt động kinh doanh.</p></div>
+        </div>
+        <div class="stats-grid">
+          <div class="stat-card"><div class="stat-icon blue"><i class="fa-solid fa-users"></i></div><div><span>Khách hàng</span><strong id="statCustomers">0</strong></div></div>
+          <div class="stat-card"><div class="stat-icon green"><i class="fa-solid fa-box"></i></div><div><span>Sản phẩm</span><strong id="statProducts">0</strong></div></div>
+          <div class="stat-card"><div class="stat-icon orange"><i class="fa-solid fa-cart-shopping"></i></div><div><span>Đơn hàng</span><strong id="statOrders">0</strong></div></div>
+          <div class="stat-card"><div class="stat-icon red"><i class="fa-solid fa-money-bill-transfer"></i></div><div><span>Công nợ phải thu</span><strong id="statDebt">0 đ</strong></div></div>
+        </div>
+
+        <div class="grid-2 mt-3">
+          <div class="panel">
+            <div class="panel-head"><h5>Đơn hàng gần đây</h5><button class="btn btn-sm btn-outline-primary" onclick="showPage('orders')">Xem tất cả</button></div>
+            <div class="table-responsive"><table class="table table-hover mb-0"><thead><tr><th>Mã đơn</th><th>Khách hàng</th><th>Giá trị</th><th>Trạng thái</th></tr></thead><tbody id="recentOrders"></tbody></table></div>
+          </div>
+          <div class="panel">
+            <div class="panel-head"><h5>Khách hàng nổi bật</h5><button class="btn btn-sm btn-outline-primary" onclick="showPage('customers')">Quản lý</button></div>
+            <div id="topCustomers" class="list-stack"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="customers" class="page">
+        <div class="page-head">
+          <div><h2>Khách hàng / Đại lý</h2><p>Quản lý đối tác đầu ra theo cấu trúc module hiện tại.</p></div>
+          <button class="btn btn-primary" onclick="openCustomerModal()"><i class="fa-solid fa-plus me-1"></i>Thêm khách hàng</button>
+        </div>
+        <div class="panel">
+          <div class="toolbar"><div class="search-box"><i class="fa-solid fa-magnifying-glass"></i><input id="customerSearch" placeholder="Tìm mã, tên khách hàng..." oninput="renderCustomers()"></div><select id="customerTypeFilter" class="form-select form-select-sm filter-select" onchange="renderCustomers()"><option value="">Tất cả phân loại</option><option>Đại lý cấp 1</option><option>Khách lẻ / Showroom</option><option>Đối tác Export</option></select></div>
+          <div class="table-responsive"><table class="table table-hover align-middle"><thead><tr><th>MÃ KH</th><th>TÊN ĐỐI TÁC / CÔNG TY</th><th>PHÂN LOẠI</th><th>CHÍNH SÁCH</th><th>LIÊN HỆ</th><th></th></tr></thead><tbody id="customerTableBody"></tbody></table></div>
+        </div>
+      </section>
+
+      <section id="products" class="page"><div class="page-head"><div><h2>Sản phẩm</h2><p>Khung quản lý danh mục hàng hóa sẽ được nối vào dữ liệu thật ở bước tiếp theo.</p></div><button class="btn btn-primary" onclick="toast('Module sản phẩm đang ở phiên bản khung V1')"><i class="fa-solid fa-plus me-1"></i>Thêm sản phẩm</button></div><div class="empty-state"><i class="fa-solid fa-box-open"></i><h4>Module sản phẩm</h4><p>Cấu trúc đã sẵn sàng để phát triển danh mục, giá bán, tồn kho và đơn vị tính.</p></div></section>
+      <section id="orders" class="page"><div class="page-head"><div><h2>Đơn hàng</h2><p>Quản lý đơn bán hàng và trạng thái xử lý.</p></div><button class="btn btn-primary" onclick="toast('Module đơn hàng sẽ được kết nối sau')"><i class="fa-solid fa-plus me-1"></i>Tạo đơn hàng</button></div><div class="empty-state"><i class="fa-solid fa-cart-shopping"></i><h4>Module đơn hàng</h4><p>Sẵn sàng mở rộng thành quy trình: tạo đơn → duyệt → giao → thu tiền.</p></div></section>
+      <section id="delivery" class="page"><div class="page-head"><div><h2>Giao hàng</h2><p>Theo dõi giao nhận và tuyến đường.</p></div></div><div class="empty-state"><i class="fa-solid fa-truck-fast"></i><h4>Module giao hàng</h4><p>Sẽ quản lý phiếu giao, tài xế, xe, tuyến và trạng thái giao hàng.</p></div></section>
+      <section id="debt" class="page"><div class="page-head"><div><h2>Công nợ</h2><p>Theo dõi hạn mức, phải thu và lịch thanh toán.</p></div></div><div class="empty-state"><i class="fa-solid fa-file-invoice-dollar"></i><h4>Module công nợ</h4><p>Dữ liệu hạn mức và thời hạn thanh toán lấy từ hồ sơ khách hàng.</p></div></section>
+      <section id="reports" class="page"><div class="page-head"><div><h2>Báo cáo</h2><p>Tổng hợp doanh thu, đơn hàng, khách hàng và công nợ.</p></div></div><div class="empty-state"><i class="fa-solid fa-chart-column"></i><h4>Trung tâm báo cáo</h4><p>V1 tập trung xây nền dữ liệu; báo cáo biểu đồ sẽ triển khai sau.</p></div></section>
+      <section id="settings" class="page"><div class="page-head"><div><h2>Cài đặt</h2><p>Cấu hình hệ thống.</p></div></div><div class="empty-state"><i class="fa-solid fa-gear"></i><h4>Cài đặt hệ thống</h4><p>Phiên bản sau sẽ có thông tin doanh nghiệp, người dùng và phân quyền.</p></div></section>
+    </div>
+  </main>
+</div>
+
+<div class="modal fade" id="customerModal" tabindex="-1">
+  <div class="modal-dialog modal-xl modal-dialog-scrollable"><div class="modal-content">
+    <div class="modal-header"><h5 class="modal-title"><i class="fa-solid fa-user-check me-2"></i><span id="modalTitle">Thêm khách hàng</span></h5><button class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div>
+    <form id="customerForm">
+      <div class="modal-body">
+        <input type="hidden" id="customerIndex">
+        <div class="section-title">1. THÔNG TIN CƠ BẢN & GIAO HÀNG</div>
+        <div class="row g-2">
+          <div class="col-md-3"><label>Mã khách hàng *</label><input id="c_code" class="form-control form-control-sm" required></div>
+          <div class="col-md-5"><label>Tên khách hàng / Công ty *</label><input id="c_name" class="form-control form-control-sm" required></div>
+          <div class="col-md-4"><label>Phân loại khách hàng</label><select id="c_type" class="form-select form-select-sm"><option>Đại lý cấp 1</option><option>Khách lẻ / Showroom</option><option>Đối tác Export</option></select></div>
+          <div class="col-md-8"><label>Địa chỉ giao hàng / Kho nhận</label><input id="c_address" class="form-control form-control-sm"></div>
+          <div class="col-md-4"><label>Tuyến đường / Chà xe nhận</label><input id="c_route" class="form-control form-control-sm"></div>
+        </div>
+        <div class="section-title">2. CHÍNH SÁCH BÁN HÀNG & CÔNG NỢ</div>
+        <div class="row g-2">
+          <div class="col-md-4"><label>Hạn mức công nợ tối đa (VNĐ)</label><input id="c_limit" type="number" min="0" class="form-control form-control-sm"></div>
+          <div class="col-md-4"><label>Thời hạn thanh toán (ngày)</label><input id="c_days" type="number" min="0" class="form-control form-control-sm"></div>
+          <div class="col-md-4"><label>Mức chiết khấu mặc định (%)</label><input id="c_discount" type="number" min="0" step="0.01" class="form-control form-control-sm"></div>
+        </div>
+        <div class="section-title d-flex justify-content-between">3. TRƯỜNG THÔNG TIN TÙY CHỈNH <button type="button" class="btn btn-sm btn-outline-primary" onclick="addCustomField()">+ Thêm trường</button></div>
+        <div id="customFieldsContainer"></div>
+        <div class="section-title d-flex justify-content-between text-danger">4. DANH BẠ NGƯỜI LIÊN HỆ <button type="button" class="btn btn-sm btn-outline-danger" onclick="addContactBlock()">+ Thêm đầu mối</button></div>
+        <div id="contactsContainer"></div>
+      </div>
+      <div class="modal-footer"><button type="button" class="btn btn-light" data-bs-dismiss="modal">Hủy</button><button class="btn btn-primary fw-bold">LƯU KHÁCH HÀNG</button></div>
+    </form>
+  </div></div>
+</div>
+
+<div id="toastArea"></div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
